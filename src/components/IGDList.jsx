@@ -3,11 +3,19 @@ import "../App.css";
 import { useState, useEffect } from "react";
 import { ScrollArea } from "./ui/scroll-area"
 import { Separator } from "./ui/separator"
+import { useIngredients } from '../ingredientsContext';
 
 function IGDScroll() {
     // 데이터와 검색 결과를 저장할 상태 변수 추가
     const [ingredients, setIngredients] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
+    const { selectedIngredients, setSelectedIngredients } = useIngredients();
+
+    const addIngredient = (ingredient) => {
+        if (!selectedIngredients.includes(ingredient)) {
+            setSelectedIngredients([...selectedIngredients, ingredient]);
+        }
+    };
 
     // 검색 기능 구현
     const handleSearch = (e) => {
@@ -52,7 +60,7 @@ function IGDScroll() {
                 <div className="p-1">
                     {searchResults.map((ingredient, index) => (
                         <React.Fragment key={index}>
-                            <div className="text-sm">
+                            <div className="text-sm" onClick={() => addIngredient(ingredient.ingredientName)} style={{"cursor": "pointer"}}>
                                 {ingredient.ingredientName}
                             </div>
                             <Separator className="my-2" />
