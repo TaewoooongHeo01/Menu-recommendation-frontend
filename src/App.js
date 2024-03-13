@@ -7,7 +7,7 @@ import FoodList from './components/foodList';
 import { IngredientsProvider, useIngredients } from './ingredientsContext';
 
 function LogButton() {
-  const { selectedIngredients } = useIngredients(); // 이 부분은 SelectedIGD 내부 또는 다른 컨텍스트를 공유할 수 있는 곳에 배치해야 합니다.
+  const { selectedIngredients } = useIngredients();
   
   const postIGDList = async () => {
 
