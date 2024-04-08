@@ -9,28 +9,32 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "./ui/carousel"
+import { useFood } from '../foodContext';
 
 export function CarouselDemo() {
+  const { food } = useFood(); // setFood는 사용하지 않으므로 제외합니다.
+
   return (
     <Carousel className="w-full max-w-xs">
       <CarouselContent>
-        {Array.from({ length: 5 }).map((_, index) => (
-          <CarouselItem key={index}>
+        {food ? ( 
+          <CarouselItem>
             <div className="p-1">
               <Card>
                 <CardContent className="flex aspect-square items-center justify-center p-6">
-                  <span className="text-4xl font-semibold">{index + 1}</span>
+                  <div className="font-semibold">{food.foodName}</div>
                 </CardContent>
               </Card>
             </div>
           </CarouselItem>
-        ))}
+        ) : (
+          <div>음식 정보가 없습니다.</div> // food 객체가 없을 경우 대체 텍스트 표시
+        )}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
     </Carousel>
   )
 }
+
 
 
 // FoodList 컴포넌트
