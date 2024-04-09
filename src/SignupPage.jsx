@@ -28,6 +28,7 @@ const Signup = () => {
                     "passwd": passwd,
                     "username": username
                  }), // 이메일과 비밀번호를 JSON 형식으로 전송
+                 credentials: 'include',
             });
 
             if (response.ok) {
@@ -52,6 +53,7 @@ const Signup = () => {
                 body: JSON.stringify({
                     "email": email,
                 }),
+                credentials: 'include',
             });
 
             if (response.ok) { // isAvailable을 서버에서 true/false로 응답한다고 가정

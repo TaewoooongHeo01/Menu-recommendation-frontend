@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 import './App.css';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [passwd, setPasswd] = useState('');
+    const { user, member, login, logout } = useAuth();
 
     const handleSubmit = async (event) => {
         event.preventDefault(); // 기본 제출 동작 방지
@@ -25,7 +27,7 @@ const LoginPage = () => {
             
             if (response.ok) {
                 const member = await response.json();
-                console.log(member);
+                login(member);
                 window.location.href='/';
             } else {
                 alert('이메일 또는 비밀번호를 확인하세요.');

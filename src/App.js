@@ -6,11 +6,12 @@ import SelectedIGD from './components/selectedIGD';
 import FoodList from './components/foodList';
 import { IngredientsProvider, useIngredients } from './ingredientsContext';
 import { FoodProvider, useFood } from './foodContext';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuItem } from './components/ui/dropdown-menu';
 import { Link, Route, Routes } from 'react-router-dom';
 import { buttonVariants } from './components/ui/button'; // 경로는 실제 Button 컴포넌트의 위치에 맞게 조정하세요.
 import LoginPage from './LoginPage.jsx';
 import SignupPage from './SignupPage.jsx';
+import { AuthProvider } from './AuthContext';
+import { useAuth } from './AuthContext';
 
 // Link 컴포넌트에 Button 스타일 적용
 const StyledLink = ({ to, children }) => {
@@ -67,67 +68,57 @@ function LogButton() {
   }
 
   if(first) {
-    return <Button className="px-4 py-2" onClick={postIGDList}>메뉴 추천</Button>;
+    return <Button className="px-4 py-2 mb-3" onClick={postIGDList}>메뉴 추천</Button>;
   } 
-  return <Button className="px-4 py-2" onClick={postIGDList}>다른 메뉴 보여주세요</Button>;
+  return <Button className="px-4 py-2 mb-3" onClick={postIGDList}>다른 메뉴 보여주세요</Button>;
 }
 
-function LoginButton() {
-  // 로그인 상태를 관리하는 State
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+function AuthStatus() {
+  const { user, logout } = useAuth();
 
-  // 로그인 상태를 토글하는 함수
-  const toggleLogin = () => setIsLoggedIn(!isLoggedIn);
-
-  // 로그인 되지 않았을 때 보여줄 버튼
-  if (!isLoggedIn) {
-    return <Button className="login-button" onClick={toggleLogin}>로그인</Button>;
-  }
-
-  // 로그인 되었을 때 보여줄 드롭다운 메뉴
-  return (
-      <div>로그인 됨</div>
-    // <DropdownMenu>
-    //   <DropdownMenuTrigger asChild>
-    //     <Button className="login-button">내 계정</Button>
-    //   </DropdownMenuTrigger>
-    //   <DropdownMenu.Content>
-    //     <DropdownMenuItem onSelect={() => alert('로그아웃')}>로그아웃</DropdownMenuItem>
-    //   </DropdownMenu.Content>
-    // </DropdownMenu>
+  return user ? (
+    <div className='right-container'>
+      <Button onClick={logout}>로그아웃</Button>
+    </div>
+  ) : (
+    <div className='right-container'>
+      <StyledLink to="/login">로그인</StyledLink>
+    </div>
   );
 }
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={
-        <div className='container mx-auto flex flex-col items-center justify-center gap-4 p-4 h-screen'>
-        {/* 기존 컨테이너 */}
-        <div className='flex justify-between items-center w-full'>
-          {/* 오른쪽 상단에 로그인 버튼 위치 */}
-          <div className='right-container'>
-            <StyledLink to="/login">로그인</StyledLink>
-          </div>
-        </div>
-        <h2 className='text-2xl mt-3'>메뉴 추천 - 갖고 있는 재료를 고르세요</h2>
-        <IngredientsProvider>
-          <FoodProvider>
-          <div className='topContainer flex gap-4 mb-4 mt-3' style={{ height: '40%' }}>
-              <div className='topContainer flex gap-4 mb-4 mt-3'>
-                  <IGDList />
-                  <SelectedIGD />
+    <AuthProvider>
+      <IngredientsProvider>
+        <FoodProvider>
+          <Routes>
+            <Route path="/" element={
+              <div className='container mx-auto flex flex-col items-center gap-4 p-4 min-h-screen'>
+                {/* 로그인 상태 표시와 메뉴 추천 제목을 각각 다른 div로 분리하여 처리 */}
+                <div className='w-full flex justify-end'>
+                  <AuthStatus />
+                </div>
+                <div className='w-full flex flex-col items-center'>
+                  <h2 className='text-2xl text-center mt-3 mb-3'>메뉴 추천 - 갖고 있는 재료를 고르세요</h2>
+                  <div className='topContainer flex gap-4 mb-4'>
+                    <IGDList />
+                    <SelectedIGD />
+                  </div>
+                  <LogButton />
+                  <FoodList />
+                </div>
               </div>
-          </div>
-          <LogButton /> 
-          <FoodList/>
-          </FoodProvider>
-        </IngredientsProvider>
-      </div>
-      }></Route>
-        <Route path="/login" element={<LoginPage/>}></Route>
-        <Route path="/signup" element={<SignupPage/>}></Route>
-      </Routes>
+            } />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+          </Routes>
+        </FoodProvider>
+      </IngredientsProvider>
+    </AuthProvider>
   );
 }
+
+
+
 

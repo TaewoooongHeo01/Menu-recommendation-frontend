@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ScrollArea } from "./ui/scroll-area"
 import { Separator } from "./ui/separator"
 import { useIngredients } from '../ingredientsContext';
+import { useAuth } from "../AuthContext";
 
 class Ingredient {
     id;
@@ -19,6 +20,7 @@ function IGDScroll() {
     const [ingredients, setIngredients] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
     const { selectedIngredients, setSelectedIngredients } = useIngredients();
+    const { user, login, lougout } = useAuth();
 
     const addIngredient = (id, ingredientName) => {
         // selectedIngredients 배열 내에 동일한 id를 가진 객체가 있는지 확인
@@ -59,9 +61,11 @@ function IGDScroll() {
                     throw new Error('Data could not be fetched!');
                 } else {
                     const data = await response.json();
-                    setIngredients(data); // 상태 업데이트
-                    setSearchResults(data); // 초기 검색 결과 설정
+                    setIngredients(data.ingredients); // 상태 업데이트
+                    setSearchResults(data.ingredients); // 초기 검색 결과 설정
+                    login(data.member);
                     console.log(data); // 콘솔에 데이터 출력
+                    console.log(user);
                 }
             } catch (error) {
                 console.error("Error fetching data: ", error);
@@ -93,7 +97,7 @@ function IGDScroll() {
 // IGDList 컴포넌트
 function IGDList() {
     return (
-      <div className="w-1/2 bg-gray-50 p-4 overflow-auto h-full shadow-lg rounded-lg overflow-hidden border border-gray-250">
+      <div className="w-1/2 h-80 bg-gray-50 p-4 shadow-lg rounded-lg border border-gray-250">
         <IGDScroll/>
       </div>
     );

@@ -37,11 +37,11 @@ function SelectedList() {
 
 // SelectedIGD 컴포넌트
 function SelectedIGD() {
-    return (
-      <div className="w-1/2 bg-gray-50 p-4 overflow-auto h-full shadow-lg rounded-lg overflow-hidden border border-gray-250">
-        <SelectedList/>
-      </div>
-    );
+  return (
+    <div className="w-1/2 h-80 bg-gray-50 p-4 shadow-lg rounded-lg border border-gray-250">
+      <SelectedList/>
+    </div>
+  );
 }
 
 export default SelectedIGD;
